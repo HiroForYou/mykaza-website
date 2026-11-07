@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hiroforyou.github.io/mykaza-website/sitemap-index.xml
