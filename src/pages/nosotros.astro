@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHead from '../components/shared/PageHead.astro';
+import WaButton from '../components/shared/WaButton.astro';
+import { site } from '../data/site';
+import { url } from '../utils/helpers';
+import { generalMessages } from '../utils/whatsapp';
+
+const offers = [
+  ['Máquinas', 'Industriales y semiindustriales de las mejores marcas.'],
+  ['Repuestos e insumos', 'Piezas y materiales para mantener tu máquina trabajando.'],
+  ['Atención directa', 'Cotiza y coordina por WhatsApp con el dueño.'],
+];
+---
+<BaseLayout title="Nosotros" description={site.description}>
+  <PageHead title="Comercial Mykaza, es tu casa" lead="Máquinas de coser, repuestos e insumos para la industria textil y el hogar." crumbs={[{ label: 'Nosotros' }]} />
+  <section class="section">
+    <div class="w about">
+      <div class="about__txt">
+        <h2 class="h" style="font-weight:800">Quiénes somos</h2>
+        <p>Comercial Mykaza, constituida legalmente como {site.legalName}, es una empresa peruana dedicada a la comercialización de máquinas de coser, repuestos e insumos para la industria textil y el hogar.</p>
+        <p>Te atendemos desde Ayacucho en dos locales. <a class="link" href={url('contacto/')}>Ver direcciones →</a></p>
+      </div>
+      <div class="panel"><img src={url('images/products/industrial-con-mesa.png')} alt="Máquina industrial con mesa" width="520" height="380" loading="lazy" /></div>
+    </div>
+  </section>
+  <section class="section section--white" style="padding:64px 0">
+    <div class="w stack">
+      <h2 class="h" style="font-weight:800">Qué ofrecemos</h2>
+      <div class="g">{offers.map(([t, d], i) => <div class="step"><div class="step__n h">{i + 1}</div><h3 class="h">{t}</h3><p>{d}</p></div>)}</div>
+    </div>
+  </section>
+  <section class="band-dark" style="padding:56px 0">
+    <div class="w cta-row">
+      <h2 class="h" style="font-size:32px;max-width:620px">¿Hablamos de tu próxima máquina?</h2>
+      <WaButton message={generalMessages.info} label="Escribir por WhatsApp" />
+    </div>
+  </section>
+</BaseLayout>

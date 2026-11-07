@@ -1,0 +1,21 @@
+---
+import WaIcon from './WaIcon.astro';
+import { site } from '../../data/site';
+import { waLink } from '../../utils/whatsapp';
+
+interface Props {
+  message: string;
+  label?: string;
+  number?: string;
+  /** solid: botón verde principal · outline: borde · soft: discreto (cards) */
+  variant?: 'solid' | 'outline' | 'soft';
+  /** El ícono solo se muestra en los CTA principales para no sobrecargar las vistas */
+  icon?: boolean;
+  class?: string;
+}
+const { message, label = 'Consultar por WhatsApp', number = site.whatsapp, variant = 'solid', icon = false, class: cls = '' } = Astro.props;
+const variantClass = { solid: 'wa', outline: 'ol', soft: 'soft' }[variant];
+---
+<a class:list={[variantClass, cls]} href={waLink(number, message)} target="_blank" rel="noopener noreferrer">
+  {icon && <WaIcon />}{label}
+</a>

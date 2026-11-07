@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHead from '../components/shared/PageHead.astro';
+import WaButton from '../components/shared/WaButton.astro';
+import ContactForm from '../components/shared/ContactForm.tsx';
+import { site } from '../data/site';
+import { generalMessages, waLink } from '../utils/whatsapp';
+
+const maps = (s: { address: string; city: string }) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.address}, ${s.city}`)}`;
+---
+<BaseLayout title="Contacto" description="Escríbenos por WhatsApp o visítanos en Ayacucho. Solicita tu cotización de máquinas de coser, repuestos e insumos.">
+  <PageHead title="Contáctanos" lead="Escríbenos por WhatsApp o visítanos en Ayacucho." crumbs={[{ label: 'Contacto' }]} />
+  <section class="section" style="padding:64px 0">
+    <div class="w stack" style="gap:48px">
+      <div class="contact-main">
+        <div class="contact-card">
+          <span class="tag">WhatsApp</span>
+          <div class="big h">{site.phones[0]}</div>
+          <p>También puedes escribirnos al <a class="alt" href={waLink(site.whatsappSecondary, generalMessages.info)} target="_blank" rel="noopener noreferrer">{site.phones[1]}</a>.</p>
+          <div><WaButton icon message={generalMessages.quote} label="Solicitar cotización" /></div>
+        </div>
+        <div class="stack" style="gap:14px">
+          <h2 class="h" style="font-size:26px">Escríbenos tu consulta</h2>
+          <ContactForm client:visible whatsapp={site.whatsapp} />
+        </div>
+      </div>
+
+      <div class="stack" style="gap:20px">
+        <h2 class="h" style="font-size:26px">Nuestras tiendas</h2>
+        <div class="g">
+          {site.stores.map((s) => (
+            <div class="c"><div class="cb" style="padding:24px"><span class="tag">{s.label}</span><h3 class="h" style="font-size:22px;font-weight:700">{s.address}</h3><p>{s.city}</p><a class="link" href={maps(s)} target="_blank" rel="noopener noreferrer" style="align-self:flex-start;margin-top:8px">Ver en Google Maps →</a></div></div>
+          ))}
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div><strong>Razón social</strong><br />{site.legalName}</div>
+        <div><strong>R.U.C.</strong><br />{site.ruc}</div>
+        <div><strong>Horario</strong><br />Consúltalo por WhatsApp</div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

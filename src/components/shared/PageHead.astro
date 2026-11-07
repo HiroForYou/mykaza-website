@@ -1,0 +1,22 @@
+---
+import { url } from '../../utils/helpers';
+
+interface Props {
+  title: string;
+  lead?: string;
+  crumbs?: { label: string; href?: string }[];
+  plain?: boolean;
+}
+const { title, lead, crumbs = [], plain = false } = Astro.props;
+---
+<section class:list={['pagehead', { 'pagehead--plain': plain }]}>
+  <div class="w">
+    <nav class="crumbs" aria-label="Migas de pan">
+      <a href={url('')}>Inicio</a>
+      {crumbs.map((c) => <> / {c.href ? <a href={c.href}>{c.label}</a> : <strong>{c.label}</strong>}</>)}
+    </nav>
+    <h1 class="h">{title}</h1>
+    {lead && <p>{lead}</p>}
+    <slot />
+  </div>
+</section>

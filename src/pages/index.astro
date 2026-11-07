@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BrandCarousel from '../components/home/BrandCarousel.tsx';
+import ProductCard from '../components/products/ProductCard.astro';
+import { site } from '../data/site';
+import { brands } from '../data/brands';
+import { categories } from '../data/categories';
+import { products } from '../data/products';
+import { url, toCard } from '../utils/helpers';
+
+const featured = products.filter((p) => p.featured).map(toCard);
+const carousel = brands.map((b) => ({ slug: b.slug, name: b.name, logo: url(b.logo), href: url(`productos/?marca=${b.slug}`) }));
+const heroCats = [
+  { slug: 'industriales', img: 'images/products/recta-industrial.png' },
+  { slug: 'semiindustriales', img: 'images/products/brother-js2135.png' },
+  { slug: 'repuestos', img: 'images/products/illus-repuestos.svg' },
+].map((h) => ({ ...h, name: categories.find((c) => c.slug === h.slug)!.short }));
+const steps = [
+  ['Elige tu máquina', 'Mira el catálogo y escoge el modelo que necesitas.'],
+  ['Escríbenos por WhatsApp', 'El botón abre el chat con el producto ya escrito.'],
+  ['Coordina con el dueño', 'Precio, pago y entrega se acuerdan directo, sin carrito.'],
+];
+---
+<BaseLayout title="Inicio" description="Máquinas de coser industriales, semiindustriales, repuestos e insumos para la industria textil y el hogar. Cotiza por WhatsApp.">
+  <section class="hero">
+    <svg class="hero__stitch" viewBox="0 0 1400 120" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 90 C 220 20, 420 120, 700 60 S 1180 10, 1400 70" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="14 10" stroke-linecap="round" />
+    </svg>
+    <div class="w hero__in">
+      <div class="hero__txt">
+        <span class="hero__kicker">Comercial Mykaza · Ayacucho</span>
+        <h1 class="h">Máquinas de coser para <em>cada proyecto</em></h1>
+        <p>Encuentra máquinas industriales, semiindustriales, repuestos e insumos para impulsar tu producción textil.</p>
+        <div class="hero__cta">
+          <a class="ol ol--dark" href={url('productos/')}>Explorar productos</a>
+          <a class="ol" href={url('marcas/')}>Ver marcas</a>
+        </div>
+        <nav class="hero__cats" aria-label="Categorías destacadas">
+          {heroCats.map((c) => <a href={url(`categorias/${c.slug}/`)}><img src={url(c.img)} alt="" width="30" height="22" />{c.name}</a>)}
+        </nav>
+        <div class="hero__facts">
+          <div><strong>{site.stores.length} tiendas</strong>en Ayacucho</div>
+          <div><strong>{brands.length} marcas</strong>de máquinas</div>
+          <div><strong>Trato directo</strong>cotiza por WhatsApp</div>
+        </div>
+      </div>
+
+      <div class="hero__visual">
+        <figure class="hero__main" style="margin:0">
+          <img src={url('images/hero/hero.png')} alt="Máquina industrial con mesa" width="520" height="400" fetchpriority="high" />
+          <figcaption>Máquina industrial con mesa <span class="price">Consultar precio</span></figcaption>
+        </figure>
+        <div class="hero__float hero__float--dark"><strong>Repuestos e insumos</strong>Dinos el modelo de tu máquina.</div>
+        <a class="hero__float hero__float--prod" href={url('productos/brother-js2135/')}>
+          <img src={url('images/hero/brother.png')} alt="" width="84" height="72" />
+          <div><strong>Brother JS2135</strong><span>Semiindustrial · Ver detalle</span></div>
+        </a>
+        <div class="hero__sticker" aria-hidden="true">{site.tagline.replace('…', '')}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="brandbar" aria-label="Marcas">
+    <p class="brandbar__lbl">Marcas que encuentras en tienda</p>
+    <BrandCarousel client:idle brands={carousel} />
+  </section>
+
+  <section class="section">
+    <div class="w stack">
+      <h2 class="h">¿Qué estás buscando?</h2>
+      <div class="g">
+        <a class="c" href={url('categorias/industriales/')} style="text-decoration:none">
+          <img class="im" style="height:240px;background:#f0df15" src={url('images/products/recta-industrial.png')} alt="Máquinas rectas industriales" width="400" height="240" loading="lazy" />
+          <div class="cb"><h3 class="h" style="font-size:22px;font-weight:700">Máquinas industriales</h3><p>Rectas, remalladoras y recubridoras para producir todos los días.</p></div>
+        </a>
+        <a class="c" href={url('categorias/semiindustriales/')} style="text-decoration:none">
+          <img class="im" style="height:240px;background:#ffff00" src={url('images/products/brother-js2135.png')} alt="Máquina semiindustrial Brother" width="400" height="240" loading="lazy" />
+          <div class="cb"><h3 class="h" style="font-size:22px;font-weight:700">Semiindustriales y hogar</h3><p>Para emprender o coser en casa con acabado profesional.</p></div>
+        </a>
+        <a class="c c--dark" href={url('categorias/repuestos/')} style="text-decoration:none">
+          <div class="ph" style="height:240px">Agujas · Hilos · Piezas</div>
+          <div class="cb"><h3 class="h" style="font-size:22px;font-weight:700">Repuestos e insumos</h3><p style="color:#e9e3d2">Todo para que tu máquina no pare. Dinos el modelo.</p></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="w stack">
+      <div class="sec-head">
+        <div><h2 class="h">Destacados</h2><p>Una selección de nuestro catálogo.</p></div>
+        <a class="link" href={url('productos/')}>Ver todo el catálogo →</a>
+      </div>
+      <div class="g">{featured.map((p) => <ProductCard p={p} />)}</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="w stack">
+      <h2 class="h">Comprar es fácil</h2>
+      <div class="g">
+        {steps.map(([t, d], i) => (
+          <div class="step"><div class="step__n h">{i + 1}</div><h3 class="h">{t}</h3><p>{d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="band-dark">
+    <div class="w visit">
+      <div class="stack" style="gap:16px">
+        <h2 class="h">Visítanos o escríbenos</h2>
+        <p style="margin:0;font-size:18px">{site.legalName} · R.U.C. {site.ruc}</p>
+        <div><a class="ol" href={url('contacto/')}>Ver contacto y ubicación</a></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;font-size:17px">
+        {site.stores.map((s) => <div><strong>{s.label}</strong><br />{s.address}, {s.city}</div>)}
+        <div><strong>WhatsApp</strong><br />{site.phones.join(' · ')}</div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

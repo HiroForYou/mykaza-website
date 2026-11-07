@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../utils/helpers';
+---
+<BaseLayout title="Página no encontrada">
+  <section class="section">
+    <div class="w stack" style="align-items:flex-start">
+      <h1 class="h" style="font-size:48px">Página no encontrada</h1>
+      <p>La página que buscas no existe o fue movida.</p>
+      <a class="ol ol--dark" href={url('productos/')}>Ir al catálogo</a>
+    </div>
+  </section>
+</BaseLayout>

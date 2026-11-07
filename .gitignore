@@ -1,2 +1,31 @@
-init.md
+# build output
+dist/
+.astro/
+
+# dependencies
 node_modules/
+
+# lockfiles de otros gestores (el proyecto usa pnpm)
+package-lock.json
+yarn.lock
+
+# logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# environment variables
+.env
+.env.*
+!.env.example
+
+# editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# archivos de trabajo locales
+init.md

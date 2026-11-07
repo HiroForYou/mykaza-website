@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHead from '../components/shared/PageHead.astro';
+import WaButton from '../components/shared/WaButton.astro';
+import { brands } from '../data/brands';
+import { products } from '../data/products';
+import { url } from '../utils/helpers';
+import { generalMessages } from '../utils/whatsapp';
+---
+<BaseLayout title="Marcas" description="Marcas de máquinas de coser que encuentras en Comercial Mykaza: Juki, Siruba, Jack, Singer y Brother.">
+  <PageHead title="Marcas que trabajamos" lead="Las marcas de máquinas de coser que encuentras en Comercial Mykaza." crumbs={[{ label: 'Marcas' }]} />
+  <section class="section" style="padding:64px 0">
+    <div class="w">
+      <div class="g">
+        {brands.map((b) => {
+          const list = products.filter((p) => p.brand === b.slug);
+          return (
+            <div class="c">
+              <div class="bcard__logo"><img src={url(b.logo)} alt={b.name} loading="lazy" /></div>
+              <div class="cb">
+                <h2 class="h" style="font-size:20px;font-weight:700">{b.name}</h2>
+                <p>{b.description}</p>
+                {list.length > 0 && <p class="note">Ejemplos: {list.slice(0, 3).map((p) => p.name).join(' · ')}</p>}
+                <div class="bcard__actions" style="padding-top:8px"><a class="link" href={url(`productos/?marca=${b.slug}`)}>Ver {list.length} productos →</a></div>
+              </div>
+            </div>
+          );
+        })}
+        <div class="c c--dark">
+          <div class="cb" style="justify-content:center;gap:16px;padding:28px">
+            <h2 class="h" style="font-size:24px;color:#ffd400">¿Buscas otra marca?</h2>
+            <p style="color:#e9e3d2">Escríbenos y la buscamos contigo.</p>
+            <div><WaButton message={generalMessages.otherBrand} label="Preguntar por WhatsApp" /></div>
+          </div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:28px">Los nombres y logos pertenecen a sus respectivos propietarios. Su uso es referencial.</p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHead from '../../components/shared/PageHead.astro';
+import { categories } from '../../data/categories';
+import { products } from '../../data/products';
+import { url } from '../../utils/helpers';
+---
+<BaseLayout title="Categorías" description="Explora máquinas industriales, semiindustriales, domésticas, repuestos, accesorios e insumos textiles.">
+  <PageHead title="Categorías" lead="Encuentra lo que necesitas por tipo de producto." crumbs={[{ label: 'Categorías' }]} />
+  <section class="section">
+    <div class="w">
+      <div class="g">
+        {categories.map((c) => {
+          const n = products.filter((p) => p.category === c.slug).length;
+          return (
+            <a class="c" href={url(`categorias/${c.slug}/`)} style="text-decoration:none">
+              <div class="cb" style="padding:24px">
+                <span class="tag">{n} {n === 1 ? 'producto' : 'productos'}</span>
+                <h2 class="h" style="font-size:24px">{c.name}</h2>
+                <p>{c.description}</p>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

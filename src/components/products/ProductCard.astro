@@ -1,0 +1,20 @@
+---
+import type { ProductCardData } from '../../utils/helpers';
+
+interface Props { p: ProductCardData }
+const { p } = Astro.props;
+---
+<!-- Toda la card enlaza al detalle; la consulta por WhatsApp está en la página del producto -->
+<article class="c pcard">
+  <img class:list={['im', { 'im--illus': p.illustration }]} src={p.image} alt={p.name} width="400" height="220" loading="lazy" decoding="async" />
+  <div class="cb">
+    <div class="pcard__top"><span class="tag">{p.categoryName}</span><span>{p.brandName}</span></div>
+    <h3 class="h pcard__title"><a href={p.href}>{p.name}</a></h3>
+    <p class="pcard__desc">{p.description}</p>
+    <p class="pcard__meta">{p.highlight} · Modelo: {p.model}</p>
+    <div class="pcard__foot">
+      <span class="price">{p.price ? `S/ ${p.price}` : 'Consultar precio'}</span>
+      <span class="pcard__more" aria-hidden="true">Ver detalle →</span>
+    </div>
+  </div>
+</article>

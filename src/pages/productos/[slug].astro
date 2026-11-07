@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Gallery from '../../components/products/Gallery.tsx';
+import ProductCard from '../../components/products/ProductCard.astro';
+import WaButton from '../../components/shared/WaButton.astro';
+import { products } from '../../data/products';
+import { brandName, getBrand, getCategory, related, toCard, url, isIllustration } from '../../utils/helpers';
+import { productMessage } from '../../utils/whatsapp';
+
+export function getStaticPaths() {
+  return products.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+const { p } = Astro.props;
+const brand = getBrand(p.brand);
+const category = getCategory(p.category);
+const card = toCard(p);
+const rel = related(p).map(toCard);
+const specs = [
+  { label: 'Marca', value: brandName(p.brand) },
+  { label: 'Modelo', value: p.model },
+  { label: 'Categoría', value: category.name },
+  ...p.specifications.filter((s) => !['Marca', 'Modelo', 'Categoría'].includes(s.label)),
+];
+---
+<BaseLayout title={p.name} description={`${p.name} (${brandName(p.brand)}). ${p.description}`} image={isIllustration(p.image) ? undefined : p.image}>
+  <section style="padding:40px 0 72px">
+    <div class="w stack">
+      <nav class="crumbs" aria-label="Migas de pan">
+        <a href={url('')}>Inicio</a> / <a href={url('productos/')}>Productos</a> / <a href={url(`categorias/${category.slug}/`)}>{category.short}</a> / <strong>{p.name}</strong>
+      </nav>
+      <div class="pd">
+        <Gallery client:visible images={p.gallery.map((g) => url(g))} alt={p.name} illustration={isIllustration(p.image)} />
+        <div class="pd__info">
+          {brand ? <img class="pd__brand" src={url(brand.logo)} alt={brand.name} height="28" /> : <span class="tag">Varias marcas</span>}
+          <h1 class="h">{p.name}</h1>
+          <p style="margin:0;font-size:18px">{p.description}</p>
+          <div class="price" style="font-size:24px">{p.price ? `S/ ${p.price}` : 'Consultar precio'}</div>
+          <div class="hero__cta">
+            <WaButton icon message={productMessage(card)} label="Consultar por WhatsApp" />
+            <a class="ol" href={url('productos/')}>Volver al catálogo</a>
+          </div>
+          <p class="note">Sin carrito: el precio, el pago y la entrega se coordinan por WhatsApp.</p>
+          {p.features.length > 0 && (
+            <div class="pd__sec"><h2 class="h">Características</h2><ul>{p.features.map((f) => <li>{f}</li>)}</ul></div>
+          )}
+          <div class="pd__sec">
+            <h2 class="h">Especificaciones</h2>
+            <table class="spec"><tbody>{specs.map((s) => <tr><th scope="row">{s.label}</th><td>{s.value}</td></tr>)}</tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section section--white" style="padding:64px 0">
+    <div class="w stack">
+      <h2 class="h" style="font-size:32px">También te puede interesar</h2>
+      <div class="g">{rel.map((r) => <ProductCard p={r} />)}</div>
+    </div>
+  </section>
+</BaseLayout>

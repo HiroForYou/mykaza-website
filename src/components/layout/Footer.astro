@@ -1,0 +1,13 @@
+---
+import Logo from '../shared/Logo.astro';
+import { site } from '../../data/site';
+---
+<footer class="footer">
+  <div class="w footer__in">
+    <Logo />
+    <div class="footer__legal">
+      <span>© {new Date().getFullYear()} {site.name} · Ayacucho, Perú</span>
+      <span>{site.legalName} · R.U.C. {site.ruc}</span>
+    </div>
+  </div>
+</footer>

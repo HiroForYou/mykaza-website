@@ -1,0 +1,65 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # despliegue a producción
+    paths-ignore:
+      - "**.md"
+  pull_request:
+  workflow_dispatch:
+
+env:
+  PUBLIC_SITE_URL: https://hiroforyou.github.io
+  PUBLIC_BUSINESS_NAME: Comercial Mykaza
+  # Opcional: define la variable de repositorio PUBLIC_WHATSAPP_NUMBER
+  # (Settings → Secrets and variables → Actions → Variables). Si no existe,
+  # se usa el número principal del template.
+  PUBLIC_WHATSAPP_NUMBER: ${{ vars.PUBLIC_WHATSAPP_NUMBER }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - name: Validar (astro check / TypeScript)
+        run: pnpm run check
+      - run: pnpm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-dist
+          path: ./dist
+
+  deploy:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site-dist
+          path: ./dist
+
+      - name: Deploy a la rama gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist

@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHead from '../../components/shared/PageHead.astro';
+import Catalog from '../../components/products/Catalog.tsx';
+import { brands } from '../../data/brands';
+import { categories } from '../../data/categories';
+import { products } from '../../data/products';
+import { toCard, url } from '../../utils/helpers';
+
+export function getStaticPaths() {
+  return categories.map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+const { c } = Astro.props;
+const list = products.filter((p) => p.category === c.slug).map(toCard);
+---
+<BaseLayout title={c.name} description={`${c.name}: ${c.description}`}>
+  <PageHead plain title={c.name} lead={c.description} crumbs={[{ label: 'Categorías', href: url('categorias/') }, { label: c.name }]} />
+  <section style="padding:0 0 72px">
+    <div class="w">
+      <Catalog client:load products={list} brands={brands} categories={categories} lockCategory />
+    </div>
+  </section>
+</BaseLayout>

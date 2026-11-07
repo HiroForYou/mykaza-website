@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHead from '../../components/shared/PageHead.astro';
+import Catalog from '../../components/products/Catalog.tsx';
+import WaButton from '../../components/shared/WaButton.astro';
+import { brands } from '../../data/brands';
+import { categories } from '../../data/categories';
+import { products } from '../../data/products';
+import { toCard } from '../../utils/helpers';
+import { generalMessages } from '../../utils/whatsapp';
+---
+<BaseLayout title="Productos" description="Catálogo de máquinas de coser industriales, semiindustriales, repuestos e insumos. Busca por nombre, marca, categoría o modelo y cotiza por WhatsApp.">
+  <PageHead plain title="Catálogo de productos" lead="Productos de ejemplo. Elige uno para ver el detalle y consultar disponibilidad." crumbs={[{ label: 'Productos' }]} />
+  <section style="padding:0 0 72px">
+    <div class="w">
+      <Catalog client:load products={products.map(toCard)} brands={brands} categories={categories} />
+    </div>
+  </section>
+  <section class="band-yellow">
+    <div class="w cta-row">
+      <h2 class="h" style="font-size:30px;max-width:640px">¿No ves tu modelo? Pregúntanos, lo buscamos contigo.</h2>
+      <WaButton message={generalMessages.missingModel} label="Consultar disponibilidad" />
+    </div>
+  </section>
+</BaseLayout>

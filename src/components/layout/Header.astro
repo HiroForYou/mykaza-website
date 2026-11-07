@@ -1,0 +1,15 @@
+---
+import Logo from '../shared/Logo.astro';
+import HeaderMenu from './Header.tsx';
+import { nav, site } from '../../data/site';
+import { url } from '../../utils/helpers';
+import { waLink, generalMessages } from '../../utils/whatsapp';
+
+const current = Astro.url.pathname;
+---
+<header class="header">
+  <div class="w header__in">
+    <Logo />
+    <HeaderMenu client:load base={url('')} current={current} links={nav} waHref={waLink(site.whatsapp, generalMessages.info)} />
+  </div>
+</header>
